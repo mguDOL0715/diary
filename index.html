@@ -1,188 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emotion Diary</title>
+    <title>감성 일기</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #e9f5ff;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-            transition: background-color 0.5s;
+            height: 100vh;
         }
-        header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #f4f4f4;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        .container {
+            width: 375px;
+            height: 812px;
+            background: #ffffff;
+            border-radius: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
         }
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-        header img {
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-        }
-        .button-container {
-            margin-top: 20px;
-        }
-        button {
-            margin: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #happy {
-            background-color: #fce94f;
-        }
-        #sad {
-            background-color: #729fcf;
-        }
-        #angry {
-            background-color: #ef2929;
-        }
-        textarea, input[type="date"] {
-            width: 300px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        #save {
-            background-color: #8ae234;
-            color: white;
-        }
-        #calendar-view {
-            display: none;
-            margin-top: 20px;
-        }
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            width: 90%;
-            max-width: 400px;
-        }
-        .calendar div {
-            padding: 10px;
+        .header {
             text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #444;
         }
-        .calendar div.highlight {
-            background-color: #ffeb3b;
+        .calendar-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: url('calendar-icon.png') no-repeat center;
+            background-size: contain;
+            cursor: pointer;
         }
-        .hidden {
-            display: none;
+        .mood-icons {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .mood-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 10px;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            cursor: pointer;
+        }
+        .textarea-container {
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+            resize: none;
+        }
+        .save-button {
+            width: 80%;
+            margin: 20px auto;
+            display: block;
+            padding: 10px;
+            background-color: #5a9;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .music-icon {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: url('music-icon.png') no-repeat center;
+            background-size: contain;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Emotion Diary</h1>
-        <img src="calendar-icon.png" alt="Calendar" id="calendar-icon">
-    </header>
-
-    <div id="write-section">
-        <div class="button-container">
-            <button id="happy">Happy</button>
-            <button id="sad">Sad</button>
-            <button id="angry">Angry</button>
+    <div class="container">
+        <div class="header">Emotional Diary</div>
+        <div class="calendar-icon"></div>
+        <div class="mood-icons">
+            <div class="mood-icon" style="background-color: #f88;">😡</div>
+            <div class="mood-icon" style="background-color: #ff8;">😊</div>
+            <div class="mood-icon" style="background-color: #8af;">😢</div>
         </div>
-        <textarea id="entry" placeholder="Write your feelings here..."></textarea>
-        <button id="save">Save Diary</button>
+        <div class="textarea-container">
+            <textarea placeholder="오늘의 이야기를 적어보세요..."></textarea>
+        </div>
+        <button class="save-button">저장</button>
+        <div class="music-icon"></div>
     </div>
-
-    <div id="calendar-view" class="hidden">
-        <h2>Diary Calendar</h2>
-        <div class="calendar" id="calendar"></div>
-        <button id="back">Back</button>
-    </div>
-
-    <script>
-        const body = document.body;
-        const happyButton = document.getElementById('happy');
-        const sadButton = document.getElementById('sad');
-        const angryButton = document.getElementById('angry');
-        const saveButton = document.getElementById('save');
-        const entry = document.getElementById('entry');
-        const calendarIcon = document.getElementById('calendar-icon');
-        const writeSection = document.getElementById('write-section');
-        const calendarView = document.getElementById('calendar-view');
-        const backButton = document.getElementById('back');
-        const calendar = document.getElementById('calendar');
-
-        let diaries = {};
-
-        happyButton.addEventListener('click', () => {
-            body.style.backgroundColor = '#fce94f';
-        });
-
-        sadButton.addEventListener('click', () => {
-            body.style.backgroundColor = '#729fcf';
-        });
-
-        angryButton.addEventListener('click', () => {
-            body.style.backgroundColor = '#ef2929';
-        });
-
-        saveButton.addEventListener('click', () => {
-            const text = entry.value.trim();
-            const date = new Date().toISOString().split('T')[0];
-
-            if (text) {
-                if (!diaries[date]) {
-                    diaries[date] = [];
-                }
-                diaries[date].push(text);
-                entry.value = '';
-                alert('Diary saved successfully!');
-
-                updateCalendar();
-            } else {
-                alert('Please write something before saving!');
-            }
-        });
-
-        calendarIcon.addEventListener('click', () => {
-            writeSection.classList.add('hidden');
-            calendarView.classList.remove('hidden');
-        });
-
-        backButton.addEventListener('click', () => {
-            writeSection.classList.remove('hidden');
-            calendarView.classList.add('hidden');
-        });
-
-        function updateCalendar() {
-            calendar.innerHTML = '';
-            Object.keys(diaries).forEach(date => {
-                const dayDiv = document.createElement('div');
-                dayDiv.textContent = date.split('-')[2]; // Show only the day
-                dayDiv.classList.add('highlight');
-                dayDiv.addEventListener('click', () => {
-                    alert(`Entries for ${date}:\n${diaries[date].join('\n')}`);
-                });
-                calendar.appendChild(dayDiv);
-            });
-        }
-
-        updateCalendar();
-    </script>
 </body>
 </html>
